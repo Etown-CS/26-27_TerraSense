@@ -1,12 +1,11 @@
-import { StyleSheet, Text } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
 import { useState } from 'react';
 
+import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
 import LoginField from '@/components/ui/LoginField';
-
+import { ThemedText } from '@/components/themed-text';
+import { ThemedView } from '@/components/themed-view';
 
 
 export default function Signup() {
@@ -21,7 +20,7 @@ export default function Signup() {
          <SafeAreaView style={styles.safeArea}>
             <ThemedView style={styles.heroSection}>
         
-            <ThemedText type="title">Sign-Up</ThemedText>
+            <ThemedText type="title" style={styles.title}>Sign-Up</ThemedText>
             <LoginField
                 value={username}
                 text="Set Username"
@@ -37,6 +36,11 @@ export default function Signup() {
                 }}
             />
 
+            <ThemedView style={styles.accountPrompt}>
+              <ThemedText type="small" style={styles.accountText}>Already have an account?</ThemedText>
+              <ThemedText type="linkPrimary">Login instead</ThemedText>
+            </ThemedView>
+            
             </ThemedView>
          </SafeAreaView>
         </ThemedView>
@@ -64,9 +68,6 @@ container: {
     paddingHorizontal: Spacing.four,
     gap: Spacing.four,
   },
-  title: {
-    textAlign: 'center',
-  },
   code: {
     textTransform: 'uppercase',
   },
@@ -76,6 +77,16 @@ container: {
     paddingHorizontal: Spacing.three,
     paddingVertical: Spacing.four,
     borderRadius: Spacing.four,
+  },
+  title: {
+    textAlign: 'center',
+    paddingBottom: Spacing.five,
+  },
+  accountText: {
+    textAlign: 'center',
+  },
+  accountPrompt: {
+    alignItems: 'center',
   },
 
 });
