@@ -22,7 +22,7 @@
 #include "Adafruit_SHT31.h"
 #include <BH1750.h>
 
-const int SOIL_MOISTURE_PIN = 34;
+const int SOIL_MOISTURE_PIN = 19;
 
 Adafruit_SHT31 sht31 = Adafruit_SHT31();
 BH1750 lightMeter;
