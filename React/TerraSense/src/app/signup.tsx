@@ -38,7 +38,7 @@ export default function Signup() {
 
             <ThemedView style={styles.accountPrompt}>
               <ThemedText type="small" style={styles.accountText}>Already have an account?</ThemedText>
-              <ThemedText type="linkPrimary">Login instead</ThemedText>
+              <ThemedText type="linkPrimary">Login instead!</ThemedText>
             </ThemedView>
             
             </ThemedView>
