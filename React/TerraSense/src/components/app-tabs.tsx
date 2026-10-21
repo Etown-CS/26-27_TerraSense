@@ -19,6 +19,10 @@ export default function AppTabs() {
       <NativeTabs.Trigger name="signup">
         <NativeTabs.Trigger.Label>Sign-Up</NativeTabs.Trigger.Label>
       </NativeTabs.Trigger>
+
+      <NativeTabs.Trigger name="login">
+        <NativeTabs.Trigger.Label>Login</NativeTabs.Trigger.Label>
+      </NativeTabs.Trigger>
     </NativeTabs>
   );
 }

@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useState } from 'react';
+import { Link } from 'expo-router';
 
 import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
 import LoginField from '@/components/ui/LoginField';
@@ -38,7 +39,9 @@ export default function Signup() {
 
             <ThemedView style={styles.accountPrompt}>
               <ThemedText type="small" style={styles.accountText}>Already have an account?</ThemedText>
-              <ThemedText type="linkPrimary">Login instead!</ThemedText>
+              <Link href="/login" asChild>
+                <ThemedText type="linkPrimary">Login instead!</ThemedText>
+              </Link>
             </ThemedView>
             
             </ThemedView>
