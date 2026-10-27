@@ -15,7 +15,7 @@ export default function HomeScreen() {
   
   type Plant = {
     plant_id: string;
-    name: string;
+    plant_name: string;
     ideal_humidity_pct: number;
     ideal_light_lvl: number;
     ideal_temp: number;
@@ -72,7 +72,7 @@ export default function HomeScreen() {
               <View style={styles.plantCard}>
                 <ThemedText type="smallBold">{item.name}</ThemedText>
                 <ThemedText>
-                  Humidity: {item.ideal_humidity_pct}% · Light: {item.ideal_light_lvl} lumens ·
+                  {item.plant_name} · Humidity: {item.ideal_humidity_pct}% · Light: {item.ideal_light_lvl} lumens ·
                   Temperature: {item.ideal_temp} C · Soil moisture: {item.ideal_moisture_lvl}%
                 </ThemedText>
               </View>
