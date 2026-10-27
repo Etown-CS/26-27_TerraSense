@@ -13,6 +13,8 @@ SETUP (on the Pi):
     pip install paho-mqtt firebase-admin
     python terrasense_bridge.py
 
+    nohup python terrasense_bridge.py > terrasense.log 2>&1 &
+
 Start with FIREBASE_MODE = "off" to confirm local logging works first.
 Then set it to "rtdb" (Realtime Database) or "firestore" and fill in the
 Firebase settings below.
