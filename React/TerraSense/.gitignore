@@ -43,3 +43,4 @@ example
 /android
 
 scripts/firebase_init.js
+src/lib/firebase.ts
