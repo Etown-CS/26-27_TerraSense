@@ -22,6 +22,8 @@ export default function HomeScreen() {
     ideal_moisture_lvl: number;
   }
 
+  
+
   const [plants, setPlants] = useState<Plant[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
