@@ -8,7 +8,8 @@ import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
 import Button from '@/components/ui/button';
 
 import { collection, getDocs } from 'firebase/firestore/lite';
-import { db } from '@/lib/firebase';
+import { db, realtimeDb } from '@/lib/firebase';
+import { onValue, ref } from 'firebase/database';
 
 export default function HomeScreen() {
   const [modalVisible, setModalVisible] = useState(false);
@@ -22,11 +23,44 @@ export default function HomeScreen() {
     ideal_moisture_lvl: number;
   }
 
-  
+  type Readout = {
+      humidity: number;
+      lux: number;
+      node_id: string;
+      soil_pct: number;
+      temp_c: number;
+  }
 
   const [plants, setPlants] = useState<Plant[]>([]);
+  const [readouts, setReadouts] = useState<Record<string, Readout | null>>({});
+  const [readoutErrors, setReadoutErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const nodeIds = ['node1', 'node2'] as const;
+
+    const unsubscribe = nodeIds.map((nodeId) =>
+      onValue(
+        ref(realtimeDb, `nodes/${nodeId}/latest`),
+        (snapshot) => {
+          setReadouts((current) => ({
+            ...current,
+            [nodeId]: snapshot.val() as Readout | null,
+          }));
+        },
+        (error) => {
+          setReadoutErrors((current) => ({
+            ...current,
+            [nodeId]: error.message,
+          }));
+          console.error(`Could not read ${nodeId} data:`, error);
+        }
+      )
+    );
+
+    return () => unsubscribe.forEach((stop) => stop());
+  }, []);
 
   useEffect(() => {
     let active = true;
@@ -60,6 +94,26 @@ export default function HomeScreen() {
         <ThemedView style={styles.heroSection}>
 
         <ThemedText type="subtitle" style={styles.title}>Your Plants</ThemedText>
+
+        {(['node1', 'node2'] as const).map((nodeId) => {
+          const readout = readouts[nodeId];
+
+          return (
+            <View key={nodeId} style={styles.plantCard}>
+              <ThemedText type="smallBold">{nodeId}</ThemedText>
+              {readoutErrors[nodeId] ? (
+                <ThemedText>Could not load readout: {readoutErrors[nodeId]}</ThemedText>
+              ) : readout ? (
+                <ThemedText>
+                  Humidity: {readout.humidity}% · Light: {readout.lux} lux ·
+                  Temperature: {readout.temp_c} °C · Soil moisture: {readout.soil_pct}%
+                </ThemedText>
+              ) : (
+                <ThemedText>Waiting for readout...</ThemedText>
+              )}
+            </View>
+          );
+        })}
         
         {loading ? (
           <ThemedText>Loading Plants...</ThemedText>
@@ -72,9 +126,9 @@ export default function HomeScreen() {
             ListEmptyComponent={<ThemedText>No plants</ThemedText>}
             renderItem={({ item }) => (
               <View style={styles.plantCard}>
-                <ThemedText type="smallBold">{item.name}</ThemedText>
+                <ThemedText type="smallBold">{item.plant_name}</ThemedText>
                 <ThemedText>
-                  {item.plant_name} · Humidity: {item.ideal_humidity_pct}% · Light: {item.ideal_light_lvl} lumens ·
+                  Ideal humidity: {item.ideal_humidity_pct}% · Light: {item.ideal_light_lvl} lumens ·
                   Temperature: {item.ideal_temp} C · Soil moisture: {item.ideal_moisture_lvl}%
                 </ThemedText>
               </View>
