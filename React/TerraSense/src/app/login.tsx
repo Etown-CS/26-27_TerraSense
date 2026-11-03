@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { Link } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useState } from 'react';
 
@@ -6,6 +7,7 @@ import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
 import LoginField from '@/components/ui/LoginField';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
+import Button from '@/components/ui/button';
 
 export default function Login() {
         const [username, setUsername] = useState("");
@@ -33,6 +35,17 @@ export default function Login() {
                     toggle: toggleShowPassword,
                 }}
             />
+
+            <Button title='Login' onPress={() => {
+                // TODO: Add login logic here
+            }} />
+
+            <ThemedView style={styles.accountPrompt}>
+              <ThemedText type="small" style={styles.accountText}>Don't have an account?</ThemedText>
+                <Link href="/signup" asChild>
+                  <ThemedText type="linkPrimary">Sign up here!</ThemedText>
+                </Link>
+            </ThemedView>
             
             </ThemedView>
          </SafeAreaView>

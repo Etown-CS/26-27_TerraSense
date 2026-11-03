@@ -7,13 +7,17 @@ import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
 import LoginField from '@/components/ui/LoginField';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
+import Button from '@/components/ui/button';
 
 
 export default function Signup() {
         const [username, setUsername] = useState("");
         const [password, setPassword] = useState("");
+        const [confirmPassword, setConfirmPassword] = useState("");
         const [showPassword, setShowPassword] = useState(false);
+        const [showConfirmPassword, setShowConfirmPassword] = useState(false);
         const toggleShowPassword = () => {setShowPassword(current => !current);};
+        const toggleShowConfirmPassword = () => {setShowConfirmPassword(current => !current);};
 
 
     return (
@@ -36,6 +40,20 @@ export default function Signup() {
                     toggle: toggleShowPassword,
                 }}
             />
+
+            <LoginField
+                value={confirmPassword}
+                text="Confirm Password"
+                onChangeText={setConfirmPassword}
+                passwordVisibility={{
+                    visible: showConfirmPassword,
+                    toggle: toggleShowConfirmPassword,
+                }}
+            />
+
+            <Button title='Sign Up' onPress={() => {
+                // TODO: Add sign-up logic here
+            }} />
 
             <ThemedView style={styles.accountPrompt}>
               <ThemedText type="small" style={styles.accountText}>Already have an account?</ThemedText>
