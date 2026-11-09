@@ -7,7 +7,7 @@ import { ThemedView } from '@/components/themed-view';
 import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
 import Button from '@/components/ui/button';
 
-import { collection, getDocs } from 'firebase/firestore/lite';
+import { collection, getDocs } from 'firebase/firestore';
 import { db, realtimeDb } from '@/lib/firebase';
 import { onValue, ref } from 'firebase/database';
 

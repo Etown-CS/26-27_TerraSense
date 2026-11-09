@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useState } from 'react';
 import { Link } from 'expo-router';
@@ -18,6 +18,23 @@ export default function Signup() {
         const [showConfirmPassword, setShowConfirmPassword] = useState(false);
         const toggleShowPassword = () => {setShowPassword(current => !current);};
         const toggleShowConfirmPassword = () => {setShowConfirmPassword(current => !current);};
+
+      const handleSignUp = () => {
+        if(!username || !password || !confirmPassword) {
+          Alert.alert('Error', 'Please fill in all fields to sign-up.')
+        } else if(password !== confirmPassword) {
+          Alert.alert('Error', 'Passwords do not match.')
+        } else if(password.length < 8 || !/\d/.test(password) || !/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
+          Alert.alert('Error', 'Password must be at least 8 characters long, contain a number, and a special character.')
+        } else if(username) {  // Implement username validation here
+          Alert.alert('Error', 'Username is already taken.')
+        } else {
+          Alert.alert('Success', 'Account created successfully.')
+          // Implement account creation logic here
+        }
+
+      }
+
 
 
     return (
@@ -51,9 +68,7 @@ export default function Signup() {
                 }}
             />
 
-            <Button title='Sign Up' onPress={() => {
-                // TODO: Add sign-up logic here
-            }} />
+            <Button title='Sign Up' onPress={handleSignUp} />
 
             <ThemedView style={styles.accountPrompt}>
               <ThemedText type="small" style={styles.accountText}>Already have an account?</ThemedText>
@@ -87,6 +102,7 @@ container: {
     justifyContent: 'center',
     flex: 1,
     paddingHorizontal: Spacing.four,
+    paddingTop: 200,
     gap: Spacing.four,
   },
   code: {

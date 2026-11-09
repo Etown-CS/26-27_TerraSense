@@ -42,5 +42,6 @@ example
 /ios
 /android
 
+# Firebase
 scripts/firebase_init.js
 src/lib/firebase.ts

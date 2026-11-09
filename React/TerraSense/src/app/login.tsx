@@ -1,7 +1,8 @@
-import { StyleSheet } from 'react-native';
-import { Link } from 'expo-router';
+import { Alert, StyleSheet } from 'react-native';
+import { Link, useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
 import LoginField from '@/components/ui/LoginField';
@@ -10,10 +11,30 @@ import { ThemedView } from '@/components/themed-view';
 import Button from '@/components/ui/button';
 
 export default function Login() {
+        const router = useRouter();
         const [username, setUsername] = useState("");
         const [password, setPassword] = useState("");
         const [showPassword, setShowPassword] = useState(false);
         const toggleShowPassword = () => {setShowPassword(current => !current);};
+
+        const authenticate = async (username, password) => {
+          // Implement authentication logic here
+          return true;
+        }
+
+        const handleLogin = async () => {
+          if(username && password) {
+            const result = await authenticate(username, password);
+            if(result){
+              router.push('/');
+            }
+          } else if(!username || !password) {
+            Alert.alert('Error', 'Please fill in all fields to login.')
+          } else {
+            Alert.alert('Error', 'Invalid username or password. Please try again.')
+          }
+          
+        }
 
     return (
         <ThemedView style={styles.container}>
@@ -36,9 +57,7 @@ export default function Login() {
                 }}
             />
 
-            <Button title='Login' onPress={() => {
-                // TODO: Add login logic here
-            }} />
+            <Button title='Login' onPress={handleLogin} />
 
             <ThemedView style={styles.accountPrompt}>
               <ThemedText type="small" style={styles.accountText}>Don't have an account?</ThemedText>
@@ -73,6 +92,7 @@ container: {
     justifyContent: 'center',
     flex: 1,
     paddingHorizontal: Spacing.four,
+    paddingTop: 200,
     gap: Spacing.four,
   },
   code: {
