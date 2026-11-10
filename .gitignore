@@ -128,3 +128,5 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+data/terrasense-cs401-firebase-adminsdk-fbsvc-2ddf7ce1b2.json
