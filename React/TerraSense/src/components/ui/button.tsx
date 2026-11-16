@@ -1,14 +1,8 @@
 import {Pressable, StyleSheet, Text} from 'react-native';
 import type { StyleProp, ViewStyle } from "react-native";
 
-function Button({
-    title,
-    onPress,
-    style
-}: {
-    title: string;
-    onPress: () => void
-    style?: StyleProp<ViewStyle>
+function Button({title, onPress, style}: {
+    title: string; onPress: () => void; style?: StyleProp<ViewStyle>
 }) {
 
   return (
