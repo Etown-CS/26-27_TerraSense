@@ -1,20 +1,58 @@
 import { Alert, Image, Modal, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import * as ImagePicker from 'expo-image-picker';
+import { addDoc, collection, getDocs } from 'firebase/firestore/lite';
 
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
 import Button from '@/components/ui/button';
 import PlantDropdown from '@/components/ui/PlantDropdown';
+import { db } from '@/lib/firebase';
+
+type Plant = {
+  plant_id: string;
+  plant_name: string;
+  node_id: string;
+  image_uri: string | null;
+};
 
 export default function HomeScreen() {
   const [modalVisible, setModalVisible] = useState(false);
   const [imageUri, setImageUri] = useState<string | null>(null);
   const [plantName, setPlantName] = useState('');
   const [selectedNode, setSelectedNode] = useState<string | null>(null);
-  const [plants, setPlants] = useState<{ name: string; node: string; imageUri: string | null }[]>([]);
+  const [plants, setPlants] = useState<Plant[]>([]);
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+
+    async function loadPlants() {
+      try {
+        const snapshot = await getDocs(collection(db, 'plants'));
+        const savedPlants = snapshot.docs.map((plantDoc) => {
+          const data = plantDoc.data();
+          return {
+            plant_id: plantDoc.id,
+            plant_name: typeof data.plant_name === 'string' ? data.plant_name : 'Unnamed plant',
+            node_id: typeof data.node_id === 'string' ? data.node_id : '',
+            image_uri: typeof data.image_uri === 'string' ? data.image_uri : null,
+          };
+        });
+        if (active) setPlants(savedPlants);
+      } catch (error) {
+        console.error('Error loading plants:', error);
+        Alert.alert('Could not load plants', 'Check your connection and Firestore access, then try again.');
+      }
+    }
+
+    void loadPlants();
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const handleCancelModal = () => {
     setPlantName('');
@@ -23,7 +61,7 @@ export default function HomeScreen() {
     setModalVisible(false);
   }
 
-  const handleAddModal = () => {
+  const handleAddModal = async () => {
     const name = plantName.trim();
     if (!name) {
       Alert.alert('Plant name required', 'Enter a name before saving the plant.');
@@ -34,11 +72,26 @@ export default function HomeScreen() {
       return;
     }
 
-    setPlants(currentPlants => [
-      ...currentPlants,
-      { name, node: selectedNode, imageUri },
-    ]);
-    handleCancelModal();
+    if (saving) return;
+    setSaving(true);
+    try {
+      const plant = {
+        plant_name: name,
+        node_id: `node${selectedNode}`,
+        image_uri: imageUri,
+      };
+      const savedPlant = await addDoc(collection(db, 'plants'), plant);
+      setPlants((currentPlants) => [
+        ...currentPlants,
+        { plant_id: savedPlant.id, ...plant },
+      ]);
+      handleCancelModal();
+    } catch (error) {
+      console.error('Error saving plant:', error);
+      Alert.alert('Could not save plant', 'Check your connection and Firestore access, then try again.');
+    } finally {
+      setSaving(false);
+    }
   }
 
   const pickImage = async () => {
@@ -67,14 +120,14 @@ export default function HomeScreen() {
         <ThemedText type="subtitle" style={styles.title}>Your Plants</ThemedText>
 
         <ScrollView style={styles.plantList} contentContainerStyle={styles.plantListContent}>
-          {plants.map((plant, index) => (
-            <View key={index} style={styles.plantCard}>
-              {plant.imageUri && (
-                <Image source={{ uri: plant.imageUri }} style={styles.plantCardImage} />
+          {plants.map((plant) => (
+            <View key={plant.plant_id} style={styles.plantCard}>
+              {plant.image_uri && (
+                <Image source={{ uri: plant.image_uri }} style={styles.plantCardImage} />
               )}
               <View style={styles.plantDetails}>
-                <ThemedText type="smallBold">{plant.name}</ThemedText>
-                {plant.node && <ThemedText type="small">Node {plant.node}</ThemedText>}
+                <ThemedText type="smallBold">{plant.plant_name}</ThemedText>
+                {plant.node_id && <ThemedText type="small">{plant.node_id}</ThemedText>}
               </View>
             </View>
           ))}
@@ -145,7 +198,7 @@ export default function HomeScreen() {
                     style={styles.cancelButton}
                 />
                 <Button
-                    title="Save"
+                    title={saving ? 'Saving...' : 'Save'}
                     onPress={handleAddModal}
                     style={styles.saveButton}
                 />
