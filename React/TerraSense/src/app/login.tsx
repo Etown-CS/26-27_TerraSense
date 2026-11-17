@@ -2,7 +2,6 @@ import { Alert, StyleSheet } from 'react-native';
 import { Link, useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useState } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
 import LoginField from '@/components/ui/LoginField';

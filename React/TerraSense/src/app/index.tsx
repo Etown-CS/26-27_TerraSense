@@ -137,28 +137,6 @@ export default function HomeScreen() {
         )
       }
 
-        <Button
-          title="Add Plant"
-          onPress={() => {setModalVisible(true);}}
-          style={styles.addPlantButton}
-        />
-
-        <Modal
-          visible={modalVisible}
-          animationType="slide"
-          transparent={true}
-          onRequestClose={() => setModalVisible(false)}
-        >
-          <View style={styles.modalBackdrop}>
-          <View style={styles.modalContent}>
-            <Text>Add a plant</Text>
-            <Button
-              title="Close"
-              onPress={() => setModalVisible(false)}
-            />
-          </View>
-        </View>
-        </Modal>
 
 
 

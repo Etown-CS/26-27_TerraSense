@@ -11,7 +11,7 @@ function PlantDropdown({style, pStyle, stStyle, inStyle, iStyle, value, onChange
     onChange: (value: string) => void
     }) {
 
-    // Sample data for the dropdown
+    // Sample data for the dropdown, change to fetch from database or props as needed
     const data = [
         { label: 'Node 1', value: '1' },
         { label: 'Node 2', value: '2' },
